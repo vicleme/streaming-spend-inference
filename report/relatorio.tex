@@ -4,6 +4,7 @@
 \usepackage[brazilian]{babel}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs,array,longtable}
+\usepackage{tikz}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{setspace}
 \usepackage{enumitem}
@@ -16,9 +17,9 @@
 
 \begin{center}
 {\large Fatec Baixada Santista Rubens Lara}\\
-Centro Paula Souza \textbullet{} Governo do Estado de São Paulo\\[1.2em]
+Centro Paula Souza - Governo do Estado de São Paulo\\[1.2em]
 {\Large\textbf{1ª Atividade Prática de Estatística Indutiva}}\\[0.6em]
-Curso de Ciência de Dados \textbullet{} 3º ciclo\\
+Curso de Ciência de Dados - 3º ciclo\\
 Profª. Márcia Roberta S. Pires Silva\\[1.2em]
 \textbf{Integrantes}\\
 Diego Pacheco Hissnauer\\
@@ -29,7 +30,7 @@ Victor Gabriel Leme da Silva
 
 \vspace{1em}
 
-\section*{Apresentação}
+\section*{Apresentação/Contexto}
 
 O arquivo \texttt{clientes\_plataforma\_Streaming.csv} reúne informações de $N = 100\,000$ clientes de uma plataforma de streaming. A variável estudada é \texttt{Gasto\_reais}, o gasto de cada cliente, em reais.
 
@@ -168,13 +169,100 @@ $$\xb - e = 765{,}9352 - 173{,}5291 = 592{,}4061, \qquad \xb + e = 765{,}9352 + 
 
 $$\boxed{IC(\mu;\,95\%) = [\,592{,}41 \ ;\ 939{,}46\,]}$$
 
+\subsection*{Representação gráfica}
+
+A figura mostra a curva t de Student com 24 graus de liberdade. A área central, de 95\%, fica entre $-2{,}064$ e $+2{,}064$; sobram $2{,}5\%$ em cada cauda, somando $\alpha = 5\%$. O valor $t_{\alpha/2} = 2{,}064$ é o ponto da tabela que separa essas áreas. A margem de erro do intervalo é esse valor multiplicado pelo erro padrão estimado, e foi isso que somamos e subtraímos de $\xb$.
+
+\begin{center}
+\begin{tikzpicture}[x=1.3cm,y=8cm]
+  \fill[gray!35] (-4,0) -- plot[domain=-4:-2.064,samples=40] (\x,{0.39481*(1+\x*\x/24)^(-12.5)}) -- (-2.064,0) -- cycle;
+  \fill[gray!35] (2.064,0) -- plot[domain=2.064:4,samples=40] (\x,{0.39481*(1+\x*\x/24)^(-12.5)}) -- (4,0) -- cycle;
+  \fill[blue!10] (-2.064,0) -- plot[domain=-2.064:2.064,samples=60] (\x,{0.39481*(1+\x*\x/24)^(-12.5)}) -- (2.064,0) -- cycle;
+  \draw[thick] plot[domain=-4:4,samples=80] (\x,{0.39481*(1+\x*\x/24)^(-12.5)});
+  \draw[->] (-4.3,0) -- (4.5,0) node[right] {$t$};
+  \draw (-2.064,0) -- (-2.064,-0.012) node[below] {$-2{,}064$};
+  \draw (0,0) -- (0,-0.012) node[below] {$0$};
+  \draw (2.064,0) -- (2.064,-0.012) node[below] {$+2{,}064$};
+  \draw[dashed] (-2.064,0) -- (-2.064,0.0545);
+  \draw[dashed] (2.064,0) -- (2.064,0.0545);
+  \node at (0,0.17) {\small $1-\alpha = 95\%$};
+  \node[font=\footnotesize,align=center] at (-3.25,0.115) {$\alpha/2$\\$=2{,}5\%$};
+  \node[font=\footnotesize,align=center] at (3.25,0.115) {$\alpha/2$\\$=2{,}5\%$};
+\end{tikzpicture}
+\end{center}
+
 \subsection*{Interpretação}
 
 Com 95\% de confiança, o gasto médio dos clientes da plataforma está entre R\$ 592{,}41 e R\$ 939,46. O nível de confiança se refere ao método: se repetíssemos o sorteio da amostra e a construção do intervalo muitas vezes, cerca de 95\% dos intervalos obtidos conteriam a verdadeira média populacional $\mu$.
 
 \section{Parte 3: Determinação do tamanho da amostra}
 
-\textit{Em elaboração.}
+\subsection*{Ideia}
+
+Na Parte 2, o tamanho da amostra era fixo e calculamos o intervalo. Agora fazemos o caminho inverso: fixamos o \textbf{erro máximo} que aceitamos cometer, $\varepsilon$, e o nível de confiança, e perguntamos qual o menor $n$ que garante isso. Exige-se
+$$P\big(|\bar{X} - \mu| \le \varepsilon\big) \ge 1-\alpha.$$
+
+\subsection*{Fórmula}
+
+Como $\bar{X} \sim N(\mu,\ \sigma^2/n)$, padronizamos dividindo pelo erro padrão $\sigma/\sqrt{n}$:
+$$P\left(-\frac{\sqrt{n}\,\varepsilon}{\sigma} \le Z \le \frac{\sqrt{n}\,\varepsilon}{\sigma}\right) = 1-\alpha .$$
+A área central $1-\alpha$ fica entre $-z$ e $+z$, então o limite superior precisa ser o próprio $z$: $\sqrt{n}\,\varepsilon/\sigma = z$. Elevando ao quadrado e isolando $n$:
+$$\boxed{\,n = \frac{z^2\,\sigma^2}{\varepsilon^2}\,}$$
+
+Como $\sigma^2$ é desconhecida, o enunciado manda usar a variância da amostra-piloto no lugar dela: $\sigma^2 \approx S^2$. Usa-se o $z$ da normal, como na aula, porque o $n$ é justamente o que ainda não conhecemos; como o resultado será bem maior que 25, a diferença para a distribuição t é desprezível.
+
+\subsection*{Dados}
+
+$S^2 = 176\,711{,}76$ (Parte 1); \ $\varepsilon = \text{R\$ } 50{,}00$, na mesma unidade da variável (reais); \ confiança $1-\alpha = 95\%$.
+
+\subsection*{Valor crítico}
+
+Na Tabela III, que dá a área entre $0$ e $z$, procuramos a área $(1-\alpha)/2 = 0{,}95/2 = 0{,}47500$. Ela está na linha $1{,}9$, coluna $6$, logo
+$$z = 1{,}96, \qquad z^2 = 3{,}8416.$$
+
+\subsection*{Representação gráfica}
+
+A curva é a normal padrão. A área central de 95\% vai de $-1{,}96$ a $+1{,}96$. Na escala da média amostral, esse trecho corresponde a $\bar{X}$ ficar a no máximo $\varepsilon$ de $\mu$. Escolher $n$ é ajustar o erro padrão $\sigma/\sqrt{n}$ para que $1{,}96$ erros padrão caibam exatamente em $\varepsilon = 50$.
+
+\begin{center}
+\begin{tikzpicture}[x=1.3cm,y=8cm]
+  \fill[blue!10] (-1.96,0) -- plot[domain=-1.96:1.96,samples=60] (\x,{0.39894*exp(-\x*\x/2)}) -- (1.96,0) -- cycle;
+  \fill[gray!35] (-4,0) -- plot[domain=-4:-1.96,samples=40] (\x,{0.39894*exp(-\x*\x/2)}) -- (-1.96,0) -- cycle;
+  \fill[gray!35] (1.96,0) -- plot[domain=1.96:4,samples=40] (\x,{0.39894*exp(-\x*\x/2)}) -- (4,0) -- cycle;
+  \draw[thick] plot[domain=-4:4,samples=80] (\x,{0.39894*exp(-\x*\x/2)});
+  \draw[->] (-4.3,0) -- (4.5,0) node[right] {$z$};
+  \draw (-1.96,0) -- (-1.96,-0.012) node[below] {$-1{,}96$};
+  \draw (0,0) -- (0,-0.012) node[below] {$0$};
+  \draw (1.96,0) -- (1.96,-0.012) node[below] {$+1{,}96$};
+  \draw[dashed] (-1.96,0) -- (-1.96,0.0585);
+  \draw[dashed] (1.96,0) -- (1.96,0.0585);
+  \node[font=\footnotesize] at (-1.96,-0.098) {$\bar{x}-\mu = -\varepsilon$};
+  \node[font=\footnotesize] at (0,-0.098) {$\bar{x}-\mu = 0$};
+  \node[font=\footnotesize] at (1.96,-0.098) {$\bar{x}-\mu = +\varepsilon$};
+  \node at (0,0.17) {\small $1-\alpha = 95\%$};
+\end{tikzpicture}
+\end{center}
+
+\vspace{1.2em}
+
+\subsection*{Cálculos}
+
+$$n = \frac{z^2\,S^2}{\varepsilon^2} = \frac{3{,}8416 \cdot 176\,711{,}76}{50^2} = \frac{678\,855{,}91}{2\,500} = 271{,}5424.$$
+
+O tamanho da amostra é sempre arredondado \textbf{para cima}: com 271 clientes o erro ficaria um pouco acima de 50, e arredondar para baixo não cumpriria a exigência. Logo,
+$$\boxed{n_{\text{mín}} = 272 \text{ clientes}}$$
+
+\subsection*{Verificação}
+
+A margem de erro obtida com cada tamanho é $z\cdot S/\sqrt{n}$, com $z\cdot S = 1{,}96 \cdot 420{,}3710 = 823{,}9271$:
+\begin{align*}
+n = 271:&\quad \frac{823{,}9271}{\sqrt{271}} = \frac{823{,}9271}{16{,}4621} = 50{,}05 \quad (\text{maior que } 50),\\[0.4em]
+n = 272:&\quad \frac{823{,}9271}{\sqrt{272}} = \frac{823{,}9271}{16{,}4924} = 49{,}96 \quad (\text{menor que } 50).
+\end{align*}
+
+\subsection*{Conclusão}
+
+Para estimar o gasto médio dos clientes com 95\% de confiança e erro máximo de R\$ 50,00, são necessários \textbf{no mínimo 272 clientes} na amostra. Esse valor depende da variância estimada na amostra-piloto: outra piloto daria outra estimativa de $\sigma^2$ e, portanto, outro $n$.
 
 \section{Parte 4: Distribuição da média amostral}
 
