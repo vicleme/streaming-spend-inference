@@ -26,7 +26,8 @@ Profª. Márcia Roberta S. Pires Silva\\[1.2em]
 Diego Pacheco Hissnauer\\
 Kauan Nunes Vieira Santos\\
 Rafael Manfe Bisaio\\
-Victor Gabriel Leme da Silva
+Victor Gabriel Leme da Silva\\[1.2em]
+Data de entrega: 06/10/2026
 \end{center}
 
 \vspace{1em}
@@ -269,7 +270,7 @@ Para estimar o gasto médio dos clientes com 95\% de confiança e erro máximo d
 
 \subsection*{O que foi feito}
 
-Foram extraídas 100 amostras aleatórias simples, todas do mesmo tamanho. O enunciado não diz qual é esse tamanho, apenas que deve ser igual para as 100 amostras; adotamos o tamanho mínimo encontrado na Parte 3, $n = 272$, para dar continuidade ao raciocínio (piloto, tamanho necessário, comportamento da média nesse tamanho). No final há um complemento com $n = 100$.
+Foram extraídas 100 amostras aleatórias simples, todas do mesmo tamanho. O enunciado não diz qual é esse tamanho, apenas que deve ser igual para as 100 amostras; adotamos o tamanho mínimo encontrado na Parte 3, $n = 272$, para dar continuidade ao raciocínio (piloto, tamanho necessário, comportamento da média nesse tamanho). Como a Parte 5 menciona uma amostra de tamanho 100, incluímos no final da seção um complemento com $n = 100$, pensando justamente nela: assim, a leitura em que as 100 amostras da Parte 4 também têm tamanho 100 fica igualmente atendida.
 
 Cada amostra é uma AAS sem reposição de 272 clientes sorteados entre os 100\,000, e as 100 amostras são sorteadas de forma independente, cada uma a partir da base completa (por isso um mesmo cliente pode aparecer em amostras diferentes). Para cada amostra $j$ calculou-se a média de \texttt{Gasto\_reais}, $\bar{x}_j$, com a semente 42.
 
@@ -345,6 +346,89 @@ Repetindo o procedimento com amostras de 100 clientes (mesma semente), obtemos m
 
 \section{Parte 5: Teste de hipótese para a média}
 
-\textit{Em elaboração.}
+\subsection*{Ideia}
+
+Queremos saber se os dados trazem evidências contra a afirmação de que o gasto médio dos clientes é de R\$~800,00. Seguimos os passos da aula 07: supomos H$_0$ verdadeira e verificamos se a média observada seria muito improvável nesse cenário. O que consideramos ``muito improvável'' é definido pelo nível de significância $\alpha$.
+
+\subsection*{Passo 1: hipóteses}
+
+$$H_0:\ \mu = 800 \qquad\qquad H_1:\ \mu \neq 800$$
+
+O sinal $\neq$ em H$_1$ indica teste \textbf{bicaudal}: a região crítica fica nas duas pontas.
+
+\subsection*{Passo 2: nível de significância e distribuição}
+
+$\alpha = 5\% = 0{,}05$. O desvio padrão populacional é conhecido, $\sigma = 387$, então a variável do teste segue a distribuição \textbf{normal} (e não a t de Student, que é para quando só se conhece $S$). Como $n = 100 \ge 30$, pelo Teorema do Limite Central $\bar{X}$ é aproximadamente normal, com $\bar{X} \sim N(\mu_0,\ \sigma^2/n)$ sob H$_0$.
+
+\subsection*{Passo 3: amostra e média observada}
+
+Foi sorteada à parte uma AAS de $n = 100$ clientes, sem reposição (semente 42), independente da amostra-piloto e das amostras da Parte 4. A soma dos 100 gastos é $77\,513{,}28$, logo
+$$\bar{x}_{\text{obs}} = \frac{77\,513{,}28}{100} = 775{,}1328 \approx \text{R\$ } 775{,}13.$$
+
+\subsection*{Passo 4: erro padrão e valor crítico}
+
+$$\frac{\sigma}{\sqrt{n}} = \frac{387}{\sqrt{100}} = \frac{387}{10} = 38{,}7.$$
+
+Em um teste bicaudal com $\alpha = 0{,}05$, cada ponta tem área $\alpha/2 = 0{,}025$, e a área entre $0$ e $z$ é $0{,}5 - 0{,}025 = 0{,}47500$. Na Tabela III, esse valor está na linha $1{,}9$, coluna $6$, logo
+$$z_{\alpha/2} = 1{,}96.$$
+
+\subsection*{Passo 5: região crítica na escala da média}
+
+Da fórmula $z_L = \dfrac{\bar{x}_L - \mu_0}{\sigma/\sqrt{n}}$ (aula 07), isolando $\bar{x}_L = \mu_0 + z_L\,\sigma/\sqrt{n}$, obtemos os dois limites:
+\begin{align*}
+\bar{x}_{L1} &= 800 - 1{,}96 \cdot 38{,}7 = 800 - 75{,}852 = 724{,}148,\\
+\bar{x}_{L2} &= 800 + 1{,}96 \cdot 38{,}7 = 800 + 75{,}852 = 875{,}852.
+\end{align*}
+Assim, a região crítica (RC) é
+$$\text{RC} = \{\ \bar{x} \le 724{,}15 \ \ \text{ou}\ \ \bar{x} \ge 875{,}85\ \}.$$
+Se a média observada cair em uma dessas duas regiões, rejeitamos H$_0$.
+
+\subsection*{Representação gráfica}
+
+A curva mostra como se distribui $\bar{X}$ quando H$_0$ é verdadeira, centrada em $\mu_0 = 800$. As duas pontas cinza são a região crítica, com área $0{,}025$ em cada uma (total $\alpha = 0{,}05$). A reta tracejada marca a média observada.
+
+\begin{center}
+\begin{tikzpicture}[x=1.3cm,y=7cm]
+  \fill[gray!40] (-4,0) -- plot[domain=-4:-1.96,samples=40] (\x,{0.39894*exp(-\x*\x/2)}) -- (-1.96,0) -- cycle;
+  \fill[gray!40] (1.96,0) -- plot[domain=1.96:4,samples=40] (\x,{0.39894*exp(-\x*\x/2)}) -- (4,0) -- cycle;
+  \fill[blue!10] (-1.96,0) -- plot[domain=-1.96:1.96,samples=60] (\x,{0.39894*exp(-\x*\x/2)}) -- (1.96,0) -- cycle;
+  \draw[thick] plot[domain=-4:4,samples=80] (\x,{0.39894*exp(-\x*\x/2)});
+  \draw[->] (-4.3,0) -- (4.6,0) node[right] {$\bar{x}$};
+  \draw (-1.96,0) -- (-1.96,-0.012) node[below,align=center] {$724{,}15$\\[-1pt] {\footnotesize $z=-1{,}96$}};
+  \draw (0,0) -- (0,-0.012) node[below,align=center] {$800$\\[-1pt] {\footnotesize $z=0$}};
+  \draw (1.96,0) -- (1.96,-0.012) node[below,align=center] {$875{,}85$\\[-1pt] {\footnotesize $z=+1{,}96$}};
+  \draw[dashed] (-1.96,0) -- (-1.96,0.07);
+  \draw[dashed] (1.96,0) -- (1.96,0.07);
+  \draw[very thick,dashed] (-0.6426,0) -- (-0.6426,0.31);
+  \node[font=\footnotesize,anchor=east] at (-0.75,0.325) {$\bar{x}_{\text{obs}} = 775{,}13$};
+  \node[font=\footnotesize,align=center] at (-3.2,0.115) {rejeita H$_0$\\ ($0{,}025$)};
+  \node[font=\footnotesize,align=center] at (3.2,0.115) {rejeita H$_0$\\ ($0{,}025$)};
+  \node[font=\footnotesize,align=center] at (1.6,0.30) {não rejeita H$_0$\\ ($0{,}95$)};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.6em}
+
+\subsection*{Passo 6: decisão}
+
+A média observada é $\bar{x}_{\text{obs}} = 775{,}13$. Comparando com a região crítica:
+$$724{,}15 < 775{,}13 < 875{,}85,$$
+ou seja, $\bar{x}_{\text{obs}}$ está \textbf{fora} da região crítica. Portanto, \textbf{não se rejeita H$_0$}.
+
+\textbf{Conferência pela variável padronizada.} O mesmo resultado sai de $z_{\text{obs}}$:
+$$z_{\text{obs}} = \frac{\bar{x}_{\text{obs}} - \mu_0}{\sigma/\sqrt{n}} = \frac{775{,}1328 - 800}{38{,}7} = \frac{-24{,}8672}{38{,}7} = -0{,}6426,$$
+e $-1{,}96 < -0{,}6426 < 1{,}96$, de novo fora da região crítica.
+
+\subsection*{Passo 7: conclusão}
+
+\textbf{Há evidências, ao nível de significância de 5\%, de que o gasto médio dos clientes seja diferente de R\$~800,00?} Não. A média observada, R\$~775,13, ficou a menos de um erro padrão de 800 ($|z_{\text{obs}}| = 0{,}64$), uma diferença compatível com a variação amostral esperada para $n = 100$. Logo, \textbf{não há evidências, ao nível de 5\%, de que o gasto médio seja diferente de R\$~800,00}; a amostra não contraria a afirmação.
+
+Dois cuidados de interpretação:
+\begin{itemize}[leftmargin=1.5em]
+\item \textbf{Não rejeitar H$_0$ não prova que $\mu = 800$.} Significa apenas que esta amostra não trouxe evidência suficiente contra essa afirmação. Se a média observada tivesse caído na região crítica, a conclusão seria o contrário: \emph{há} evidências de que o gasto médio é diferente de R\$~800,00.
+\item \textbf{A decisão vale para $\alpha = 5\%$.} É por isso que o nível é sempre citado na conclusão.
+\end{itemize}
+
+\textbf{Relação com a Parte 2.} Um teste bicaudal a $\alpha = 5\%$ rejeita H$_0$ exatamente quando $\mu_0$ fica fora do intervalo de confiança de 95\%. Com $\sigma$ conhecido, esse intervalo seria $775{,}13 \pm 1{,}96 \cdot 38{,}7 = [699{,}28\ ;\ 850{,}98]$, e o valor 800 está dentro dele, o que concorda com a decisão de não rejeitar.
 
 \end{document}

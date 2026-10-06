@@ -59,7 +59,7 @@ Folders are filled in as the work progresses, one part at a time.
 
 ## Status
 
-Work in progress.
+All five parts are solved (`R/01` to `R/05`) and written up step by step in the printed report (`report/relatorio.pdf`, in Portuguese). Open question for the instructor: in part 4, "100 samples of the same size" was read as n = 272 (the part 3 result), with n = 100 shown as a complement.
 
 ## License
 

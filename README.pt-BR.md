@@ -59,7 +59,7 @@ As pastas são preenchidas conforme o trabalho avança, uma parte por vez.
 
 ## Situação
 
-Em andamento.
+As cinco partes estão resolvidas (`R/01` a `R/05`) e redigidas passo a passo no relatório impresso (`report/relatorio.pdf`). Dúvida em aberto para a professora: na Parte 4, "100 amostras de mesmo tamanho" foi lido como n = 272 (resultado da Parte 3), com n = 100 apresentado como complemento.
 
 ## Licença
 
