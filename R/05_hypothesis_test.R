@@ -20,7 +20,7 @@ alfa  <- 0.05
 # Passo: erro padrão
 ep <- sigma / sqrt(n)
 
-# Passo: valor crítico. Tabela III: área entre 0 e z = (1 - alfa)/2 = 0.47500 -> z = 1.96
+# Passo: valor crítico. Tabela III - normal padrão: área entre 0 e z = (1 - alfa)/2 = 0.47500 -> z = 1.96
 z_tab   <- 1.96
 z_exato <- qnorm(1 - alfa/2)                   # conferência
 
@@ -34,7 +34,7 @@ rejeita <- (x_obs <= xL1) | (x_obs >= xL2)
 
 cat("soma =", sum(amostra$Gasto_reais), "\n")
 cat("x_obs =", x_obs, "| EP =", ep, "\n")
-cat("z (Tabela III) =", z_tab, "| z exato =", round(z_exato, 4), "\n")
+cat("z (Tabela III - normal padrão) =", z_tab, "| z exato =", round(z_exato, 4), "\n")
 cat("RC: x <=", xL1, "ou x >=", xL2, "\n")
 cat("z_obs =", z_obs, "\n")
 cat("Rejeita H0?", rejeita, "\n")

@@ -36,7 +36,7 @@ Data de entrega: 06/10/2026
 
 O arquivo \texttt{clientes\_plataforma\_Streaming.csv} reúne informações de $N = 100\,000$ clientes de uma plataforma de streaming. A variável estudada é \texttt{Gasto\_reais}, o gasto de cada cliente, em reais.
 
-Neste relatório, os cálculos seguem o método visto em aula: valores críticos lidos nas tabelas impressas (Tabela III, normal padrão; Tabela V, t de Student), variância amostral com divisor $n-1$, graus de liberdade $\nu = n-1$ e conclusões escritas na linguagem do problema. O software R foi usado para sortear as amostras e para conferir as contas; o código está no repositório do trabalho (\texttt{streaming-spend-inference}, no GitHub) e todos os sorteios usam a semente 42, o que permite repetir exatamente os mesmos resultados.
+Neste relatório, os cálculos seguem o método visto em aula: valores críticos lidos nas tabelas impressas (Tabela III - normal padrão; Tabela V - t de Student), variância amostral com divisor $n-1$, graus de liberdade $\nu = n-1$ e conclusões escritas na linguagem do problema. O software R foi usado para sortear as amostras e para conferir as contas; o código está no repositório do trabalho (\texttt{streaming-spend-inference}, no GitHub) e todos os sorteios usam a semente 42, o que permite repetir exatamente os mesmos resultados.
 
 \section{Parte 1: Amostra-piloto}
 
@@ -160,7 +160,7 @@ $$IC(\mu;\,95\%) = \left[\ \xb - t_{\alpha/2}\cdot\frac{S}{\sqrt{n}}\ ;\ \xb + t
 \textbf{1. Erro padrão estimado:}
 $$\frac{S}{\sqrt{n}} = \frac{420{,}3710}{\sqrt{25}} = \frac{420{,}3710}{5} = 84{,}0742.$$
 
-\textbf{2. Valor crítico.} A Tabela V é bicaudal: a coluna indica a soma das áreas das duas caudas. Para confiança de 95\%, usa-se a coluna $p = \alpha = 5\%$, na linha $\nu = 24$:
+\textbf{2. Valor crítico.} A Tabela V - t de Student é bicaudal: a coluna indica a soma das áreas das duas caudas. Para confiança de 95\%, usa-se a coluna $p = \alpha = 5\%$, na linha $\nu = 24$:
 $$t_{\alpha/2} = 2{,}064.$$
 
 \textbf{3. Margem de erro:}
@@ -219,7 +219,7 @@ $S^2 = 176\,711{,}76$ (Parte 1); \ $\varepsilon = \text{R\$ } 50{,}00$, na mesma
 
 \subsection*{Valor crítico}
 
-Na Tabela III, que dá a área entre $0$ e $z$, procuramos a área $(1-\alpha)/2 = 0{,}95/2 = 0{,}47500$. Ela está na linha $1{,}9$, coluna $6$, logo
+Na Tabela III - normal padrão, que dá a área entre $0$ e $z$, procuramos a área $(1-\alpha)/2 = 0{,}95/2 = 0{,}47500$. Ela está na linha $1{,}9$, coluna $6$, logo
 $$z = 1{,}96, \qquad z^2 = 3{,}8416.$$
 
 \subsection*{Representação gráfica}
@@ -369,7 +369,7 @@ $$\bar{x}_{\text{obs}} = \frac{77\,513{,}28}{100} = 775{,}1328 \approx \text{R\$
 
 $$\frac{\sigma}{\sqrt{n}} = \frac{387}{\sqrt{100}} = \frac{387}{10} = 38{,}7.$$
 
-Em um teste bicaudal com $\alpha = 0{,}05$, cada ponta tem área $\alpha/2 = 0{,}025$, e a área entre $0$ e $z$ é $0{,}5 - 0{,}025 = 0{,}47500$. Na Tabela III, esse valor está na linha $1{,}9$, coluna $6$, logo
+Em um teste bicaudal com $\alpha = 0{,}05$, cada ponta tem área $\alpha/2 = 0{,}025$, e a área entre $0$ e $z$ é $0{,}5 - 0{,}025 = 0{,}47500$. Na Tabela III - normal padrão, esse valor está na linha $1{,}9$, coluna $6$, logo
 $$z_{\alpha/2} = 1{,}96.$$
 
 \subsection*{Passo 5: região crítica na escala da média}
