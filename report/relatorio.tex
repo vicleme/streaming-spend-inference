@@ -5,6 +5,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs,array,longtable}
 \usepackage{tikz}
+\usepackage{graphicx}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{setspace}
 \usepackage{enumitem}
@@ -193,7 +194,7 @@ A figura mostra a curva t de Student com 24 graus de liberdade. A área central,
 
 \subsection*{Interpretação}
 
-Com 95\% de confiança, o gasto médio dos clientes da plataforma está entre R\$ 592{,}41 e R\$ 939,46. O nível de confiança se refere ao método: se repetíssemos o sorteio da amostra e a construção do intervalo muitas vezes, cerca de 95\% dos intervalos obtidos conteriam a verdadeira média populacional $\mu$.
+Com 95\% de confiança, o gasto médio dos clientes da plataforma está entre R\$~592{,}41 e R\$~939,46. O nível de confiança se refere ao método: se repetíssemos o sorteio da amostra e a construção do intervalo muitas vezes, cerca de 95\% dos intervalos obtidos conteriam a verdadeira média populacional $\mu$.
 
 \section{Parte 3: Determinação do tamanho da amostra}
 
@@ -262,11 +263,85 @@ n = 272:&\quad \frac{823{,}9271}{\sqrt{272}} = \frac{823{,}9271}{16{,}4924} = 49
 
 \subsection*{Conclusão}
 
-Para estimar o gasto médio dos clientes com 95\% de confiança e erro máximo de R\$ 50,00, são necessários \textbf{no mínimo 272 clientes} na amostra. Esse valor depende da variância estimada na amostra-piloto: outra piloto daria outra estimativa de $\sigma^2$ e, portanto, outro $n$.
+Para estimar o gasto médio dos clientes com 95\% de confiança e erro máximo de R\$~50,00, são necessários \textbf{no mínimo 272 clientes} na amostra. Esse valor depende da variância estimada na amostra-piloto: outra piloto daria outra estimativa de $\sigma^2$ e, portanto, outro $n$.
 
 \section{Parte 4: Distribuição da média amostral}
 
-\textit{Em elaboração.}
+\subsection*{O que foi feito}
+
+Foram extraídas 100 amostras aleatórias simples, todas do mesmo tamanho. O enunciado não diz qual é esse tamanho, apenas que deve ser igual para as 100 amostras; adotamos o tamanho mínimo encontrado na Parte 3, $n = 272$, para dar continuidade ao raciocínio (piloto, tamanho necessário, comportamento da média nesse tamanho). No final há um complemento com $n = 100$.
+
+Cada amostra é uma AAS sem reposição de 272 clientes sorteados entre os 100\,000, e as 100 amostras são sorteadas de forma independente, cada uma a partir da base completa (por isso um mesmo cliente pode aparecer em amostras diferentes). Para cada amostra $j$ calculou-se a média de \texttt{Gasto\_reais}, $\bar{x}_j$, com a semente 42.
+
+\subsection*{As 100 médias amostrais (em R\$)}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{rr|rr|rr|rr}
+\toprule
+$j$ & $\bar{x}_j$ & $j$ & $\bar{x}_j$ & $j$ & $\bar{x}_j$ & $j$ & $\bar{x}_j$ \\
+\midrule
+1 & 829,76 & 26 & 796,13 & 51 & 835,90 & 76 & 837,24 \\
+2 & 846,72 & 27 & 835,98 & 52 & 878,97 & 77 & 814,38 \\
+3 & 792,34 & 28 & 797,01 & 53 & 783,07 & 78 & 855,13 \\
+4 & 811,95 & 29 & 796,86 & 54 & 818,42 & 79 & 829,98 \\
+5 & 842,63 & 30 & 841,69 & 55 & 815,01 & 80 & 807,89 \\
+6 & 873,35 & 31 & 802,83 & 56 & 877,55 & 81 & 854,30 \\
+7 & 817,63 & 32 & 855,51 & 57 & 801,12 & 82 & 816,39 \\
+8 & 837,96 & 33 & 835,36 & 58 & 858,72 & 83 & 819,23 \\
+9 & 837,88 & 34 & 827,41 & 59 & 829,80 & 84 & 837,98 \\
+10 & 802,89 & 35 & 814,78 & 60 & 831,23 & 85 & 823,31 \\
+11 & 846,10 & 36 & 863,26 & 61 & 826,42 & 86 & 816,50 \\
+12 & 819,32 & 37 & 821,58 & 62 & 831,74 & 87 & 835,21 \\
+13 & 855,86 & 38 & 868,04 & 63 & 776,48 & 88 & 829,06 \\
+14 & 841,10 & 39 & 810,40 & 64 & 859,81 & 89 & 823,89 \\
+15 & 845,72 & 40 & 831,42 & 65 & 816,61 & 90 & 830,73 \\
+16 & 834,50 & 41 & 844,63 & 66 & 820,51 & 91 & 830,35 \\
+17 & 839,38 & 42 & 861,35 & 67 & 827,47 & 92 & 826,06 \\
+18 & 815,75 & 43 & 837,47 & 68 & 823,89 & 93 & 823,60 \\
+19 & 844,24 & 44 & 805,93 & 69 & 831,58 & 94 & 832,82 \\
+20 & 842,36 & 45 & 791,39 & 70 & 839,23 & 95 & 842,68 \\
+21 & 793,91 & 46 & 853,13 & 71 & 811,72 & 96 & 805,31 \\
+22 & 792,07 & 47 & 869,89 & 72 & 821,33 & 97 & 838,70 \\
+23 & 853,48 & 48 & 805,88 & 73 & 842,65 & 98 & 845,26 \\
+24 & 827,02 & 49 & 809,04 & 74 & 819,06 & 99 & 829,53 \\
+25 & 822,60 & 50 & 799,73 & 75 & 863,48 & 100 & 846,25 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Média e desvio padrão das 100 médias}
+
+Tratando as 100 médias como um novo conjunto de dados:
+$$\bar{\bar{x}} = \frac{1}{100}\sum_{j=1}^{100}\bar{x}_j = \frac{82\,936{,}77}{100} = 829{,}3677.$$
+
+O desvio padrão usa o divisor $100-1 = 99$, como em toda variância amostral da disciplina:
+$$s_{\bar{x}} = \sqrt{\frac{1}{99}\sum_{j=1}^{100}\left(\bar{x}_j - \bar{\bar{x}}\right)^2} = \sqrt{\frac{44\,998{,}08}{99}} = 21{,}32.$$
+
+\textbf{Resultado da Parte 4:} média das 100 médias $= \text{R\$ } 829{,}37$ \ e \ desvio padrão das 100 médias $= \text{R\$ } 21{,}32$.
+
+\subsection*{Comparação com o que a teoria prevê (aula 03)}
+
+A distribuição amostral da média tem $E(\bar{X}) = \mu$ e desvio padrão igual ao erro padrão $\sigma/\sqrt{n}$. Com $\sigma = 387$ (valor informado na Parte 5) e $n = 272$:
+$$\frac{\sigma}{\sqrt{n}} = \frac{387}{\sqrt{272}} = \frac{387}{16{,}4924} = 23{,}47.$$
+
+\begin{itemize}[leftmargin=1.5em]
+\item \textbf{Centro:} as médias se concentram em torno de R\$~829,37. Como a base reúne todos os clientes, podemos calcular a média da população, apenas para comparação: R\$~831,98. A média das 100 médias ficou muito próxima dela, o que ilustra $E(\bar{X}) = \mu$ (a média amostral não erra sistematicamente para cima nem para baixo).
+\item \textbf{Dispersão:} o desvio padrão observado, 21,32, tem a mesma ordem de grandeza do erro padrão teórico, 23,47. Não precisa ser idêntico: com apenas 100 médias, o próprio desvio padrão observado varia de um sorteio para outro.
+\item \textbf{Efeito de $n$:} as médias variam muito menos do que os gastos individuais, cujo desvio padrão é $\sigma = 387$. Dividir por $\sqrt{272} \approx 16{,}5$ é o que concentra as médias.
+\end{itemize}
+
+\subsection*{Representação gráfica}
+
+À esquerda, a distribuição dos gastos de toda a população: aproximadamente plana, sem formato de sino. À direita, o histograma das 100 médias, com a curva normal de mesma média e mesmo desvio padrão. Mesmo com a população longe de ser normal, as médias se distribuem em forma de sino, como diz o Teorema do Limite Central.
+
+\begin{center}
+\includegraphics[width=0.95\textwidth]{fig_parte4.pdf}
+\end{center}
+
+\subsection*{Complemento: o mesmo estudo com $n = 100$}
+
+Repetindo o procedimento com amostras de 100 clientes (mesma semente), obtemos média das 100 médias de R\$~829,21 e desvio padrão de R\$~42,65. O erro padrão teórico seria $387/\sqrt{100} = 38{,}70$. Com amostras menores as médias ficam mais dispersas (desvio padrão de 42,65 contra 21,32 com $n = 272$), em linha com a teoria: o erro padrão diminui quando $n$ aumenta.
 
 \section{Parte 5: Teste de hipótese para a média}
 
