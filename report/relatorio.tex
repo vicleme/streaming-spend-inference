@@ -1,0 +1,187 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,array,longtable}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{enumitem}
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\newcommand{\xb}{\bar{x}}
+
+\begin{document}
+
+\begin{center}
+{\large Fatec Baixada Santista Rubens Lara}\\
+Centro Paula Souza \textbullet{} Governo do Estado de São Paulo\\[1.2em]
+{\Large\textbf{1ª Atividade Prática de Estatística Indutiva}}\\[0.6em]
+Curso de Ciência de Dados \textbullet{} 3º ciclo\\
+Profª. Márcia Roberta S. Pires Silva\\[1.2em]
+\textbf{Integrantes}\\
+Diego Pacheco Hissnauer\\
+Kauan Nunes Vieira Santos\\
+Rafael Manfe Bisaio\\
+Victor Gabriel Leme da Silva
+\end{center}
+
+\vspace{1em}
+
+\section*{Apresentação}
+
+O arquivo \texttt{clientes\_plataforma\_Streaming.csv} reúne informações de $N = 100\,000$ clientes de uma plataforma de streaming. A variável estudada é \texttt{Gasto\_reais}, o gasto de cada cliente, em reais.
+
+Neste relatório, os cálculos seguem o método visto em aula: valores críticos lidos nas tabelas impressas (Tabela III, normal padrão; Tabela V, t de Student), variância amostral com divisor $n-1$, graus de liberdade $\nu = n-1$ e conclusões escritas na linguagem do problema. O software R foi usado para sortear as amostras e para conferir as contas; o código está no repositório do trabalho (\texttt{streaming-spend-inference}, no GitHub) e todos os sorteios usam a semente 42, o que permite repetir exatamente os mesmos resultados.
+
+\section{Parte 1: Amostra-piloto}
+
+\subsection*{Como a amostra foi sorteada}
+
+A população é formada pelos $N = 100\,000$ clientes, que já vêm numerados de 1 a $N$ pela coluna \texttt{Cliente\_ID}. Isso nos dá o quadro amostral, a lista de todos os elementos da população, necessária para a amostragem aleatória simples (AAS).
+
+Foram sorteados $n = 25$ números distintos entre 1 e 100\,000, ou seja, uma AAS \textbf{sem reposição}, porque cada cliente deve aparecer no máximo uma vez. Cada cliente tem a mesma probabilidade de entrar na amostra:
+$$P = \frac{n}{N} = \frac{25}{100\,000} = 0{,}00025 = 0{,}025\%.$$
+
+No R, o sorteio foi feito com \texttt{set.seed(42)} seguido de \texttt{sample(1:100000, 25)}.
+
+\subsection*{(a) Dados da amostra-piloto}
+
+Seja $X$ o gasto, em reais, de um cliente da plataforma, e $X_1, \dots, X_{25}$ os gastos dos 25 clientes sorteados.
+
+\begin{center}
+\begin{tabular}{rrr}
+\toprule
+$i$ & \texttt{Cliente\_ID} & Gasto $x_i$ (R\$) \\
+\midrule
+1 & 61413 & 307,21 \\
+2 & 54425 & 375,28 \\
+3 & 99556 & 1\,405,57 \\
+4 & 74362 & 376,63 \\
+5 & 46208 & 1\,467,55 \\
+6 & 47128 & 1\,262,81 \\
+7 & 16740 & 707,08 \\
+8 & 61605 & 329,86 \\
+9 & 73236 & 905,18 \\
+10 & 9091 & 589,42 \\
+11 & 62041 & 1\,498,96 \\
+12 & 33700 & 521,75 \\
+13 & 59359 & 814,28 \\
+14 & 54789 & 442,49 \\
+15 & 54586 & 689,20 \\
+16 & 13610 & 455,13 \\
+17 & 28559 & 1\,187,84 \\
+18 & 88261 & 1\,185,36 \\
+19 & 11224 & 995,16 \\
+20 & 33713 & 709,38 \\
+21 & 64410 & 175,72 \\
+22 & 77954 & 207,86 \\
+23 & 81301 & 583,06 \\
+24 & 74743 & 568,56 \\
+25 & 96954 & 1\,387,04 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{(b) Média e variância}
+
+A média amostral é
+$$\xb = \frac{1}{n}\sum_{i=1}^{n} x_i = \frac{19\,148{,}38}{25} = 765{,}9352.$$
+
+A variância amostral usa o divisor $n-1$ (aula 03), porque $\xb$ já foi calculada com os mesmos dados e, por isso, apenas $n-1$ desvios podem variar livremente:
+$$S^2 = \frac{1}{n-1}\sum_{i=1}^{n}(x_i - \xb)^2.$$
+
+Para fazer a soma, calculamos primeiro o desvio de cada valor em relação à média e o quadrado desse desvio:
+
+{\footnotesize\renewcommand{\arraystretch}{0.92}
+\begin{longtable}{rrrr}
+\toprule
+$i$ & $x_i$ & $x_i - \xb$ & $(x_i - \xb)^2$ \\
+\midrule
+\endhead
+1 & 307,21 & $-$458,7252 & 210\,428,8091 \\
+2 & 375,28 & $-$390,6552 & 152\,611,4853 \\
+3 & 1\,405,57 & 639,6348 & 409\,132,6774 \\
+4 & 376,63 & $-$389,3052 & 151\,558,5387 \\
+5 & 1\,467,55 & 701,6148 & 492\,263,3276 \\
+6 & 1\,262,81 & 496,8748 & 246\,884,5669 \\
+7 & 707,08 & $-$58,8552 & 3\,463,9346 \\
+8 & 329,86 & $-$436,0752 & 190\,161,5801 \\
+9 & 905,18 & 139,2448 & 19\,389,1143 \\
+10 & 589,42 & $-$176,5152 & 31\,157,6158 \\
+11 & 1\,498,96 & 733,0248 & 537\,325,3574 \\
+12 & 521,75 & $-$244,1852 & 59\,626,4119 \\
+13 & 814,28 & 48,3448 & 2\,337,2197 \\
+14 & 442,49 & $-$323,4452 & 104\,616,7974 \\
+15 & 689,20 & $-$76,7352 & 5\,888,2909 \\
+16 & 455,13 & $-$310,8052 & 96\,599,8723 \\
+17 & 1\,187,84 & 421,9048 & 178\,003,6603 \\
+18 & 1\,185,36 & 419,4248 & 175\,917,1629 \\
+19 & 995,16 & 229,2248 & 52\,544,0089 \\
+20 & 709,38 & $-$56,5552 & 3\,198,4906 \\
+21 & 175,72 & $-$590,2152 & 348\,353,9823 \\
+22 & 207,86 & $-$558,0752 & 311\,447,9289 \\
+23 & 583,06 & $-$182,8752 & 33\,443,3388 \\
+24 & 568,56 & $-$197,3752 & 38\,956,9696 \\
+25 & 1\,387,04 & 621,1048 & 385\,771,1726 \\
+\midrule
+\multicolumn{3}{r}{Soma dos quadrados dos desvios} & 4\,241\,082,31 \\
+\bottomrule
+\end{longtable}
+}
+
+Os desvios somam zero (a menos de arredondamento), como deve ocorrer em torno da média. Substituindo:
+$$S^2 = \frac{4\,241\,082{,}31}{25-1} = \frac{4\,241\,082{,}31}{24} = 176\,711{,}76 \ (\text{R\$}^2).$$
+
+O desvio padrão amostral é $S = \sqrt{S^2} = \sqrt{176\,711{,}76} = 420{,}37$ reais.
+
+\textbf{Resultado da Parte 1:} $\xb = \text{R\$ } 765{,}9352$ \ e \ $S^2 = 176\,711{,}76\ \text{R\$}^2$.
+
+\section{Parte 2: Intervalo de confiança}
+
+\subsection*{Escolha da distribuição}
+
+Seja $X$ o gasto de um cliente e $X$ amostral o gasto dos 25 clientes da piloto. O enunciado manda considerar a variância populacional $\sigma^2$ \textbf{desconhecida}. Nesse caso, o desvio padrão da população é substituído por $S$ e a variável padronizada não segue a normal, e sim a distribuição \textbf{t de Student com $\nu = n-1$ graus de liberdade}. Admite-se, como na disciplina, que a média amostral tem comportamento aproximadamente normal (Teorema do Limite Central).
+
+\subsection*{Dados}
+
+$n = 25$, \ $\nu = 24$, \ $\xb = 765{,}9352$, \ $S = 420{,}3710$, \ confiança $1-\alpha = 95\%$, logo $\alpha = 0{,}05$.
+
+\subsection*{Fórmula}
+
+$$IC(\mu;\,95\%) = \left[\ \xb - t_{\alpha/2}\cdot\frac{S}{\sqrt{n}}\ ;\ \xb + t_{\alpha/2}\cdot\frac{S}{\sqrt{n}}\ \right].$$
+
+\subsection*{Cálculos}
+
+\textbf{1. Erro padrão estimado:}
+$$\frac{S}{\sqrt{n}} = \frac{420{,}3710}{\sqrt{25}} = \frac{420{,}3710}{5} = 84{,}0742.$$
+
+\textbf{2. Valor crítico.} A Tabela V é bicaudal: a coluna indica a soma das áreas das duas caudas. Para confiança de 95\%, usa-se a coluna $p = \alpha = 5\%$, na linha $\nu = 24$:
+$$t_{\alpha/2} = 2{,}064.$$
+
+\textbf{3. Margem de erro:}
+$$e = 2{,}064 \cdot 84{,}0742 = 173{,}5291.$$
+
+\textbf{4. Limites do intervalo:}
+$$\xb - e = 765{,}9352 - 173{,}5291 = 592{,}4061, \qquad \xb + e = 765{,}9352 + 173{,}5291 = 939{,}4643.$$
+
+$$\boxed{IC(\mu;\,95\%) = [\,592{,}41 \ ;\ 939{,}46\,]}$$
+
+\subsection*{Interpretação}
+
+Com 95\% de confiança, o gasto médio dos clientes da plataforma está entre R\$ 592{,}41 e R\$ 939,46. O nível de confiança se refere ao método: se repetíssemos o sorteio da amostra e a construção do intervalo muitas vezes, cerca de 95\% dos intervalos obtidos conteriam a verdadeira média populacional $\mu$.
+
+\section{Parte 3: Determinação do tamanho da amostra}
+
+\textit{Em elaboração.}
+
+\section{Parte 4: Distribuição da média amostral}
+
+\textit{Em elaboração.}
+
+\section{Parte 5: Teste de hipótese para a média}
+
+\textit{Em elaboração.}
+
+\end{document}

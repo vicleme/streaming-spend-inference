@@ -1,0 +1,21 @@
+# R
+.Rhistory
+.RData
+.Rapp.history
+.Rproj.user/
+*.Rproj
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+
+# LaTeX build files (the .tex and .pdf are versioned)
+report/*.aux
+report/*.log
+report/*.fls
+report/*.fdb_latexmk
+report/*.out
